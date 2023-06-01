@@ -46,3 +46,24 @@ metadata:
 data:
   MONGO_URL: "mongodb://admin1:roboshop1@robot-dev-docdb.cluster-ciqb6xvrbz0q.us-east-1.docdb.amazonaws.com:27017/user?tls=true&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false"  
   REDIS_HOST: "robot-dev-redis.ij0ide.0001.use1.cache.amazonaws.com"
+
+--- 
+
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: user-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: user
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75
